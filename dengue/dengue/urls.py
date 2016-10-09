@@ -20,4 +20,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^users/', include('users.urls')),
     url(r'^breeding_source/', include('breeding.urls')),
+    url(r'^hospital/', include('hospital.urls')),
 ]
