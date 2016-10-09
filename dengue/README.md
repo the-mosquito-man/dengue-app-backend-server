@@ -50,13 +50,27 @@ Grant
 
 Initial Database
 
-	python manage.py migrate --setting=dengue.settings.local
+	python manage.py migrate --settings=dengue.settings.local
 
 ### Redis
 
 Install Redis
 
     brew install redis
+
+## Setup File
+
+### Insert Hospital
+
+    $: python manage.py shell --settings=dengue.settings.local
+    >>> from hospital import load
+    >>> load.run('../data/tainan_hospital.tsv')
+
+### Insert Substitute
+
+    $: python manage.py shell --settings=dengue.settings.local
+    >>> from taiwan import load
+    >>> load.run()
 
 ## Start Server
 
@@ -66,4 +80,4 @@ Install Redis
 
 ### Local Server
 
-	python manage.py runserver --setting=dengue.settings.local
+	python manage.py runserver --settings=dengue.settings.local
