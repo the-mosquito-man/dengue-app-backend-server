@@ -48,3 +48,18 @@ CACHES = {
 # Session
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
+
+# Secret key
+with open(".secrets.json") as f:
+    secrets = json.loads(f.read())
+
+def get_secret(setting, secrets=secrets):
+    """Get the enviroment variable or return exception."""
+    try:
+        return secrets[setting]
+    except KeyError:
+        error_msg = "Set the {} enviroment variable".format(setting)
+        raise ImproperlyConfigured(error_msg)
+
+AWS_ACCESS_KEY = get_secret("AWS_ACCESS_KEY")
+AWS_SECRET_KEY = get_secret("AWS_SECRET_KEY")
