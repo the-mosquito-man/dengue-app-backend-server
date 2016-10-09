@@ -81,3 +81,14 @@ Install Redis
 ### Local Server
 
 	python manage.py runserver --settings=dengue.settings.local
+
+### Production Server
+
+    uwsgi --ini dengue.ini
+
+
+## Stop Server
+
+### Production Server
+
+    sudo killall -s INT uwsgi
