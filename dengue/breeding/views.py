@@ -119,3 +119,19 @@ class SourceCollection(APIView):
 
 
         return Response(res_data, status=status.HTTP_200_OK)
+
+class SourceTotal(APIView):
+
+    def get(self, request):
+        qualified_status = request.GET.get('qualified_status', '')
+
+        if qualified_status == '':
+            qualified_status = ['待審核', '已通過', '未通過']
+        else:
+            qualified_status = qualified_status.split(',')
+
+        total = Source.objects.filter(
+            userprofile=request.user.userprofile,
+            qualified_status__in=qualified_status).count()
+        res_data = {'total': total}
+        return Response(res_data, status=status.HTTP_200_OK)
