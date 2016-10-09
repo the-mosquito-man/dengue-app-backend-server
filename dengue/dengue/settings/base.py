@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'users',
     'breeding',
     'taiwan',
-    'hospital'
+    'hospital',
+    'bite',
 ]
 
 MIDDLEWARE = [
