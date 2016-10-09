@@ -35,6 +35,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'users',
+    'breeding',
+    'taiwan',
+    'hospital',
+    'bite',
 ]
 
 MIDDLEWARE = [
