@@ -1,4 +1,4 @@
-# garageDC
+# dengue
 
 * Python 3.5
 * Django 1.10.1
@@ -84,7 +84,7 @@ Install Redis
 
 ### Production Server
 
-    uwsgi --ini dengue.ini
+    sudo uwsgi --ini dengue.ini
 
 
 ## Stop Server
@@ -92,3 +92,12 @@ Install Redis
 ### Production Server
 
     sudo killall -s INT uwsgi
+
+## Create Superuser
+
+    python manage.py createsuperuser --settings=dengue.settings.local
+    Username: admin
+    Email address: admin@example.com
+    Password: some-secret
+    Password: (again): some-secret
+    Superuser created successfully.
