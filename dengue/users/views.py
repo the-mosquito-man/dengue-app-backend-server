@@ -37,8 +37,14 @@ class UserManually(APIView):
         password = request.data.get('password', '')
         email = request.data.get('email', '')
 
-        if user_uuid == '' or name == '' or phone == '' or password == '':
+        if user_uuid == '' or name == '' or password == '' or len(phone) != 10:
             return Response({"detail": "請填寫完整註冊訊息"}, status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        for phone_char in phone:
+            try:
+                int(phone_char)
+            except:
+                return Response({"detail": "請填寫完整註冊訊息"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         user = request.user
         userprofile = user.userprofile
