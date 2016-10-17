@@ -9,10 +9,13 @@ from taiwan.models import Substitute
 from django.conf import settings
 from django.contrib.gis.geos import Point
 from django.forms.models import model_to_dict
+from django.shortcuts import get_object_or_404
 from django.utils import timezone
 
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.parsers import MultiPartParser
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -20,6 +23,10 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 
 tw_tz = pytz.timezone('Asia/Taipei')
+
+class CsrfExemptSessionAuthentication(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return
 
 def photo_to_s3(user_uuid, source_uuid, photo_obj):
     photo_name = photo_obj._name
@@ -135,3 +142,39 @@ class SourceTotal(APIView):
             qualified_status__in=qualified_status).count()
         res_data = {'total': total}
         return Response(res_data, status=status.HTTP_200_OK)
+
+class AdminSourceCollection(APIView):
+
+    if settings.DEBUG == "False":
+        authentication_classes = (SessionAuthentication, BasicAuthentication)
+    else:
+        authentication_classes = (CsrfExemptSessionAuthentication, BasicAuthentication)
+
+    permission_classes = (IsAdminUser,)
+
+    def get(self, request):
+        phone = request.GET.get('phone', '')
+        if phone == '':
+            source = Source.objects.filter(qualified_status="待審核").order_by('?')[0]
+        else:
+            source = Source.objects.filter(userprofile__phone=phone,
+                                           qualified_status="待審核").order_by('?')[0]
+
+        source_filter = Source.objects.filter(userprofile=source.userprofile,
+                                              qualified_status="待審核")
+        res_data = list()
+        for source in source_filter:
+            source_dict = model_to_dict(source, fields=['photo_url'])
+            source_dict['source_uuid'] = str(source.source_uuid)
+            res_data.append(source_dict)
+
+        return Response(res_data, status=status.HTTP_200_OK)
+
+    def put(self, request):
+        breeding_source_list = request.data.get('breeding_source_list', list())
+        for source_dict in breeding_source_list:
+            source = get_object_or_404(Source, source_uuid=source_dict['source_uuid'])
+            source.qualified_status = source_dict['qualified_status']
+            source.save()
+        return Response(status=status.HTTP_200_OK)
+

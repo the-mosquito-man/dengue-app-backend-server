@@ -1,6 +1,6 @@
 import uuid
 
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from .models import UserProfile
@@ -89,3 +89,16 @@ class UserLogin(APIView):
         res_data = {"token": token.key}
 
         return Response(res_data, status=status.HTTP_200_OK)
+
+class AdminUserLogin(APIView):
+
+    permission_classes = (AllowAny,)
+
+    def post(self, request):
+        username = request.data.get('username', '')
+        password = request.data.get('password', '')
+
+        user = authenticate(username=username, password=password)
+        login(request, user)
+        return Response(status=status.HTTP_200_OK)
+
