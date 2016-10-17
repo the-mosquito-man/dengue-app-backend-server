@@ -18,7 +18,7 @@ macOS
 ### Install packages
 
 	cd ~/garageDC-webserver
-	pip install -r reuqirements.txt
+	pip install -r requirements.txt
 
 ### Postgresql & Postgis
 
