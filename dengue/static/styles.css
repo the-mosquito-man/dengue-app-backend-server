@@ -1,0 +1,22 @@
+/* Master Styles */
+.title {
+  "Helvetica Neue",Helvetica,Arial,"Heiti TC","Microsoft JhengHei","微軟正黑體","Microsoft Yahei","微軟雅黑",sans-serif
+  font-size: 250%;
+  color: #292c77;
+  margin-left: 120px;
+}
+
+html, body {
+  width: 90%;
+  margin: 25px auto;
+}
+
+li {
+  list-style-type: none;
+}
+
+.logo {
+  height: 90px;
+  position: absolute;
+  top: 20px;
+}

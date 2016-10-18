@@ -1,0 +1,29 @@
+<div class="container" (window:scroll)="onScroll($event)">
+  <div class="loading">{{loading}}</div>
+
+  <div class="top-menu" [class.fixed]="scrollDown">
+    <div class="ui left icon input search large">
+      <input #searchBox id="search-box" (keyup)="search(searchBox.value)" type="tel" pattern="[0-9]*" placeholder="Search..."/><i class="search icon"></i>
+     </div>
+    <div class="ui two buttons breeding__buttons">
+      <div class="ui basic red button" (click)="update('未通過');">
+        <i class="remove icon"></i>不通過
+      </div>
+       <div class="ui basic green button" (click)="update('已通過');">
+         <i class="checkmark icon"></i>通過
+      </div>
+    </div>
+  </div>
+
+
+  <ul class="ui cards breedings">
+    <li class="card" *ngFor="let breeding of breedings" [class.selected]="breeding.selected">
+    <div class="content">
+      <div class="image" (click)="onSelect(breeding)">
+        <img class="ui image breeding__img" src="{{breeding.photo_url}}" alt="孳生源">
+      </div>
+    </div>
+    </li>
+  </ul>
+
+  </div>

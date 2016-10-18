@@ -1,0 +1,76 @@
+.ui.cards>.card .content img {
+  cursor: pointer;
+  margin: auto;
+  display: block;
+}
+
+.loading {
+  background: #eee;
+  padding: 10px;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+.top-menu {
+  background-color: #fff;
+  padding: 20px 38px;
+  z-index: 99;
+  margin-bottom: 20px;
+}
+
+.fixed {
+  padding: 5px 5px 5px 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.fixed .ui.two.buttons {
+  background-color: #fff;
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  padding: 10px;
+  z-index: 99;
+}
+
+.search {
+  margin-right: 10px;
+}
+
+.ui.cards > .card {
+  -webkit-transition: display 3s ease-in-out;
+  -moz-transition: display 3s ease-in-out;
+  -ms-transition: display 3s ease-in-out;
+  -o-transition: display 3s ease-in-out;
+  width: 450px;
+}
+
+.selected {
+  opacity: 0.6;
+}
+
+.ui.two.buttons {
+  width: 50%;
+}
+
+.breeding__buttons > .button {
+  margin-right: 10px;
+
+}
+
+
+@media all and (max-width: 530px) {
+  .ui.two.buttons {
+    background-color: #fff;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+    z-index: 99;
+}
+}
