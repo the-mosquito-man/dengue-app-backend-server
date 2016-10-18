@@ -109,4 +109,4 @@ Install Node.js and npm, we require node v4.x.x or higher and npm 3.x.x or highe
     cd static/
     npm install
     npm run typings install
-    npm start
+    npm tsc
