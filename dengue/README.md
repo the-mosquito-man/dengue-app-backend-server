@@ -101,3 +101,12 @@ Install Redis
     Password: some-secret
     Password: (again): some-secret
     Superuser created successfully.
+
+## Frontend
+
+Install Node.js and npm, we require node v4.x.x or higher and npm 3.x.x or higher.
+
+    cd static/
+    npm install
+    npm run typings install
+    npm start
