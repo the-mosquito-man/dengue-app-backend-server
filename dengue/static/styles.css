@@ -20,3 +20,16 @@ li {
   position: absolute;
   top: 20px;
 }
+
+
+@media all and (max-width: 530px) {
+  .title {
+    margin-left: 95px;
+    margin-bottom: 20px;
+    font-size: 20px;
+  }
+
+  .logo {
+    left: 0px;
+  }
+}
