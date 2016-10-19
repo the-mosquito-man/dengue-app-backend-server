@@ -1,7 +1,9 @@
 import base64
+import io
 import mimetypes
 import pytz
 from datetime import datetime
+from PIL import Image
 
 from .models import Source
 from taiwan.models import Substitute
@@ -35,6 +37,7 @@ def photo_to_s3(user_uuid, source_uuid, photo_obj):
     if 'image' not in photo_mime:
         return ""
 
+    # Upload to S3
     photo_type = photo_name.split('.')[-1]
     conn = S3Connection(settings.AWS_ACCESS_KEY, settings.AWS_SECRET_KEY)
     bucket = conn.get_bucket('dengue-backend')
@@ -43,7 +46,17 @@ def photo_to_s3(user_uuid, source_uuid, photo_obj):
     k.set_metadata("Content-Type", photo_mime)
     k.set_contents_from_string(photo_content)
     k.set_acl("public-read")
-    return photo_content, k.generate_url(expires_in=0, query_auth=False)
+
+    # Compress Photo
+    photo_bytesio = io.BytesIO(photo_content)
+    photo_image_obj = Image.open(photo_bytesio)
+    photo_size_x, photo_size_y = photo_image_obj.size
+    photo_image_obj = photo_image_obj.resize(
+        (int(photo_size_x/2), int(photo_size_y/2)), Image.ANTIALIAS)
+    compress_bytesio = io.BytesIO()
+    photo_image_obj.save(compress_bytesio, format=photo_mime.split('/')[1])
+    compress_bytesio = compress_bytesio.getvalue()
+    return compress_bytesio, k.generate_url(expires_in=0, query_auth=False)
 
 
 class SourceCollection(APIView):
@@ -157,8 +170,11 @@ class AdminSourceCollection(APIView):
         if phone == '':
             source = Source.objects.filter(qualified_status="待審核").order_by('?')[0]
         else:
-            source = Source.objects.filter(userprofile__phone=phone,
+            try:
+                source = Source.objects.filter(userprofile__phone=phone,
                                            qualified_status="待審核").order_by('?')[0]
+            except:
+                return Response([], status=status.HTTP_200_OK)
 
         source_filter = Source.objects.filter(userprofile=source.userprofile,
                                               qualified_status="待審核")
