@@ -17,4 +17,4 @@ venv/
 ### JS ###
 node_modules/
 *.map
-*.js
+*/static/app/*.js
