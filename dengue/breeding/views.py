@@ -52,7 +52,7 @@ def photo_to_s3(user_uuid, source_uuid, photo_obj):
     photo_image_obj = Image.open(photo_bytesio)
     photo_size_x, photo_size_y = photo_image_obj.size
     photo_image_obj = photo_image_obj.resize(
-        (int(photo_size_x/2), int(photo_size_y/2)), Image.ANTIALIAS)
+        (int(photo_size_x/2*3), int(photo_size_y/2*3)), Image.ANTIALIAS)
     compress_bytesio = io.BytesIO()
     photo_image_obj.save(compress_bytesio, format=photo_mime.split('/')[1])
     compress_bytesio = compress_bytesio.getvalue()
