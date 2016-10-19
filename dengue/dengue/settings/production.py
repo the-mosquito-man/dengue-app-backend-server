@@ -67,3 +67,8 @@ def get_secret(setting, secrets=secrets):
 
 AWS_ACCESS_KEY = get_secret("AWS_ACCESS_KEY")
 AWS_SECRET_KEY = get_secret("AWS_SECRET_KEY")
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+STATIC_ROOT = "/home/ubuntu/dengue-backend/dengue/static/"
