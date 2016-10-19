@@ -60,6 +60,10 @@ export class AppComponent implements OnInit {
      .update(selectedBreedings)
      .then(() => {
        this.breedings = this.breedings.filter(b => !b.selected)
+       if (this.breedings.length === 0) {
+         this.getBreedings();
+       }
+
        this.loading = '更新成功';
        setTimeout(() => this.loading = '', 2000)
      });
