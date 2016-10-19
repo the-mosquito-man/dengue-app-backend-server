@@ -1,8 +1,12 @@
+beautifulsoup4==4.5.1
 boto==2.42.0
+bs4==0.0.1
 Django==1.10.2
 django-redis==4.5.0
 djangorestframework==3.4.7
 googlemaps==2.4.4
+lxml==3.6.4
+Pillow==3.4.2
 psycopg2==2.6.2
 pytz==2016.7
 redis==2.10.5
