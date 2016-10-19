@@ -7,7 +7,7 @@
 
 ### Create virtualenv
 
-macOS
+#### macOS
 
     pyvenv venv
 
@@ -23,6 +23,8 @@ macOS
 ### Postgresql & Postgis
 
 Install Postgresql & Postgis
+
+#### macOS
 
 	brew install postgresql
     brew install postgis
@@ -51,6 +53,12 @@ Grant
 Initial Database
 
 	python manage.py migrate --settings=dengue.settings.local
+
+### Pillow
+
+#### Ubuntu
+
+    sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 
 ### Redis
 
