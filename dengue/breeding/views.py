@@ -157,8 +157,11 @@ class AdminSourceCollection(APIView):
         if phone == '':
             source = Source.objects.filter(qualified_status="待審核").order_by('?')[0]
         else:
-            source = Source.objects.filter(userprofile__phone=phone,
+            try:
+                source = Source.objects.filter(userprofile__phone=phone,
                                            qualified_status="待審核").order_by('?')[0]
+            except:
+                return Response([], status=status.HTTP_200_OK)
 
         source_filter = Source.objects.filter(userprofile=source.userprofile,
                                               qualified_status="待審核")
