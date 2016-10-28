@@ -16,4 +16,4 @@ for userprofile in userprofile_filter:
     winner_list.append(winner_dict)
 
 with open('winners.json', 'w') as myfile:
-    json.dump(winner_list, myfile)
+    json.dump(winner_list, myfile, ensure_ascii=False, indent=4)
