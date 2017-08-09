@@ -15,7 +15,7 @@ class Hospital(models.Model):
     location = models.PointField(geography=True, srid=4326, default='POINT(0.0 0.0)')
 
     def __str__(self):
-        return self.hospital_id
+        return str(self.hospital_uuid)
 
     def save(self, **kwargs):
         self.location = Point(float(self.lng), float(self.lat))
