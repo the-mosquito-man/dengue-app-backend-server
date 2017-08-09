@@ -12,10 +12,10 @@ def run(output_file_path):
         source_user_phone = item.userprofile.phone
         source_modified_address = item.modified_address
         source_description = item.description
-        output_str_item = "%s\t%s\t%s\t%s" % \
+        output_str_item = "%s,%s,%s,%s" % \
             (source_user_name, source_user_phone, source_modified_address, source_description)
         output_str_list.append(output_str_item)
 
     output_str = '\n'.join(output_str_list)
-    with open(output_file_path, 'w') as myfile:
+    with open(output_file_path + '.csv', 'w') as myfile:
         myfile.write(output_str)
