@@ -6,7 +6,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 
 class DengueBite(models.Model):
-    userprofile = models.ForeignKey(UserProfile)
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     bite_uuid = models.TextField(primary_key=True, default=uuid.uuid4, editable=False)
     lng = models.FloatField()
     lat = models.FloatField()

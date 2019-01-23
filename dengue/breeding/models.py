@@ -6,7 +6,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
 
 class Source(models.Model):
-    userprofile = models.ForeignKey(UserProfile)
+    userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)
     source_uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     photo_url = models.URLField()
     photo_base64 = models.TextField(default='')
