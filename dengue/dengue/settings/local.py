@@ -10,20 +10,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 # MIDDLEWARE
-MIDDLEWARE += []
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework.authentication.BasicAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
-    ),
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.IsAuthenticated',
-    ),
-    'DEFAULT_PARSER_CLASSES': (
-        'rest_framework.parsers.JSONParser',
-    )
-}
 
 # Database
 # https://docs.djangoproject.com/en/1.10/ref/settings/#databases
@@ -31,10 +18,10 @@ REST_FRAMEWORK = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'dengue_db',
-        'USER': 'dengue_user',
+        'NAME': 'dengue',
+        'USER': 'dengue',
         'PASSWORD': 'dengue',
-        'HOST': '127.0.0.1',
+        'HOST': 'postgis',
         'PORT': '5432',
     }
 }
@@ -43,28 +30,11 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379/1",
+        "LOCATION": "redis://localhost:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
     }
 }
 
-# Session
-SESSION_ENGINE = "django.contrib.sessions.backends.cache"
-SESSION_CACHE_ALIAS = "default"
-
-# Secret key
-with open(".secrets.json") as f:
-    secrets = json.loads(f.read())
-
-def get_secret(setting, secrets=secrets):
-    """Get the enviroment variable or return exception."""
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = "Set the {} enviroment variable".format(setting)
-        raise ImproperlyConfigured(error_msg)
-
-AWS_ACCESS_KEY = get_secret("AWS_ACCESS_KEY")
-AWS_SECRET_KEY = get_secret("AWS_SECRET_KEY")
+SECRET_KEY = '123'
