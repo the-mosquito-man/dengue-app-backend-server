@@ -26,9 +26,12 @@ WORKDIR /dengue-backend
 ADD . /dengue-backend/
 
 # Frontend
-# WORKDIR /dengue/static
-# RUN npm install
-# RUN npm run typings install
-# RUN npm tsc
+WORKDIR /dengue-backend/dengue/static
 
+RUN npm install
+RUN npm install -g npx
+RUN npm run typings install
+RUN npx tsc
+
+WORKDIR /dengue-backend
 CMD sh ./run.sh
