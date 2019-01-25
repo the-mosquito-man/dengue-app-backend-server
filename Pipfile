@@ -19,6 +19,7 @@ Django = "==2.1.5"
 Pillow = "==5.4.0"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "*"
