@@ -1,7 +1,5 @@
 # dengue-backend
 
-
-
 ## Getting Started
 ### Prerequistes
 * [Python3.6](https://www.python.org/downloads/)
@@ -67,7 +65,6 @@ $ pipenv python manage.py migrate --settings=dengue.settings.<ENV>
 
 * Create Superuser
 
-
 ```sh
 $ python manage.py createsuperuser --settings=dengue.settings.<ENV>
 
@@ -76,6 +73,20 @@ Email address: admin@example.com
 Password: some-secret
 Password: (again): some-secret
 Superuser created successfully.
+```
+
+* Intialize Data
+
+```sh
+$ python dengue/manage.py shell --settings=dengue.settings.<ENV>
+
+# Insert Hospitial
+>>> from hospital import load
+>>> load.run('data/tainan_hospital.tsv')
+
+# Insert substitue
+>>> from taiwan import load
+>>> load.run()
 ```
 
 * Start
@@ -93,6 +104,7 @@ redis-server
 ```
 
 ### Setup Frontend
+
 ```sh
 cd dengue/static/
 npm install
@@ -116,7 +128,6 @@ $ export DENGUE_CACHE_LOCATION="redis uri"
 $ export AWS_ACCESS_KEY="AWS access key"
 $ export AWS_SECRET_KEY="AWS secret key"
 ```
-
 
 * Start local server
 
