@@ -19,3 +19,4 @@ winners.json
 node_modules/
 *.map
 */static/app/*.js
+env.cfg
