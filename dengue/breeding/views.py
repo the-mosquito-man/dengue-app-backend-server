@@ -1,12 +1,12 @@
 import base64
 import io
 import mimetypes
-import pytz
 from datetime import datetime
-from PIL import Image
 
-from .models import Source
-from taiwan.models import Substitute
+import pytz
+from PIL import Image
+from boto.s3.connection import S3Connection
+from boto.s3.key import Key
 
 from django.conf import settings
 from django.contrib.gis.geos import Point
@@ -21,14 +21,17 @@ from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from boto.s3.connection import S3Connection
-from boto.s3.key import Key
+from taiwan.models import Substitute
+from .models import Source
+
 
 tw_tz = pytz.timezone('Asia/Taipei')
+
 
 class CsrfExemptSessionAuthentication(SessionAuthentication):
     def enforce_csrf(self, request):
         return
+
 
 def photo_to_s3(user_uuid, source_uuid, photo_obj):
     photo_name = photo_obj._name
@@ -67,7 +70,6 @@ def photo_to_s3(user_uuid, source_uuid, photo_obj):
 
 
 class SourceCollection(APIView):
-
     parser_classes = (MultiPartParser,)
 
     def post(self, request):
@@ -86,7 +88,7 @@ class SourceCollection(APIView):
         try:
             source_point = Point(float(lng), float(lat), srid=4326)
             substitute = Substitute.objects.filter(mpoly__intersects=source_point)[0]
-        except:
+        except Exception:
             return Response({"detail": "經緯度錯誤"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         breeding_source = Source(userprofile=userprofile)
@@ -123,12 +125,12 @@ class SourceCollection(APIView):
 
         try:
             before_timestamp = datetime.fromtimestamp(float(before_timestamp))
-        except:
+        except Exception:
             before_timestamp = timezone.now()
 
         try:
             limit = int(limit)
-        except:
+        except Exception:
             limit = 10
 
         source_filter = Source.objects.filter(
@@ -163,6 +165,7 @@ class SourceTotal(APIView):
         res_data = {'total': total}
         return Response(res_data, status=status.HTTP_200_OK)
 
+
 class AdminSourceCollection(APIView):
 
     if settings.DEBUG == "False":
@@ -178,9 +181,11 @@ class AdminSourceCollection(APIView):
             source = Source.objects.filter(qualified_status="待審核").order_by('?')[0]
         else:
             try:
-                source = Source.objects.filter(userprofile__phone=phone,
-                                           qualified_status="待審核").order_by('?')[0]
-            except:
+                source = Source.objects.filter(
+                    userprofile__phone=phone,
+                    qualified_status="待審核"
+                ).order_by('?')[0]
+            except Exception:
                 return Response([], status=status.HTTP_200_OK)
 
         source_filter = Source.objects.filter(userprofile=source.userprofile,
@@ -200,4 +205,3 @@ class AdminSourceCollection(APIView):
             source.qualified_status = source_dict['qualified_status']
             source.save()
         return Response(status=status.HTTP_200_OK)
-

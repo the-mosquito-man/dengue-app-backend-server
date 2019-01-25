@@ -1,9 +1,10 @@
 import uuid
 
-from users.models import UserProfile
-
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import Point
+
+from users.models import UserProfile
+
 
 class Source(models.Model):
     userprofile = models.ForeignKey(UserProfile, on_delete=models.CASCADE)

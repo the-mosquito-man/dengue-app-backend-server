@@ -3,7 +3,9 @@ import googlemaps
 
 from .models import Hospital
 
+
 gmaps = googlemaps.Client(key='AIzaSyCCki0E4UW6IFXflnSW_5R5Mn20ABgnOVM')
+
 
 def run(file_path):
     with open(file_path, 'r') as myfile:
@@ -30,12 +32,14 @@ def run(file_path):
         else:
             phone = ""
 
-        hospital_tuple = Hospital.objects.get_or_create(name=name,
-                            address=address,
-                            phone=phone,
-                            opening_hours="",
-                            lng=lng,
-                            lat=lat)
+        hospital_tuple = Hospital.objects.get_or_create(
+            name=name,
+            address=address,
+            phone=phone,
+            opening_hours="",
+            lng=lng,
+            lat=lat
+        )
         hospital_tuple[0].save()
 
         time.sleep(1.5)

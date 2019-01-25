@@ -1,5 +1,3 @@
-from .models import Hospital
-
 from django.contrib.gis.db.models.functions import Distance
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
@@ -9,8 +7,10 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-class HospitalNearby(APIView):
+from .models import Hospital
 
+
+class HospitalNearby(APIView):
     def get(self, request):
         lng = request.GET.get('lng', '')
         lat = request.GET.get('lat', '')
@@ -18,7 +18,7 @@ class HospitalNearby(APIView):
         try:
             lng = float(lng)
             lat = float(lat)
-        except:
+        except Exception:
             return Response({"detail": "經緯度錯誤"}, status=status.HTTP_406_NOT_ACCEPTABLE)
 
         point = Point(lng, lat, srid=4326)

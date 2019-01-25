@@ -1,5 +1,6 @@
 from .models import Source
 
+
 def run(output_file_path):
     data = Source.objects.filter(qualified_status='已通過')
 
