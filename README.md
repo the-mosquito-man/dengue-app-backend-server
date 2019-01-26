@@ -1,5 +1,10 @@
 # dengue-backend
 
+## Table of content
+1. [Getting Started](#sec-1)
+
+
+<a name='sec-1'></a>
 ## Getting Started
 
 ### Prerequistes
@@ -17,7 +22,7 @@
 #### Install Postgis on macOS
 
 ```sh
-$ brew install postgresql
+$ brew install PostgreSQL
 $ brew install postgis
 $ brew install gdal
 $ brew install libgeoip
@@ -31,19 +36,35 @@ $ brew install redis
 
 #### Install Pillow Dependency on Ubuntu
 
-* For Ubuntu User
-
 ```sh
 $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 ```
 
-### Install Backend Packages
+
+## Run dengue-backend OUTSIDE Docker Container
+
+### Setup Backend
+
+* Install Backend Packages
 
 ```sh
 $ pipenv install
 ```
 
-## Run dengue-backend OUTSIDE Docker Container
+* Setup environment variables
+
+```sh
+$ export DENGUE_SECRET_KEY="some hard to guess value"
+$ export DENGUE_DB_NAME="database name for postgis"
+$ export DENGUE_DB_USER="user name for postgis"
+$ export DENGUE_DB_PASSWORD="user password for postgis"
+$ export DENGUE_DB_HOST="host for postgis"
+$ export DENGUE_DB_PORT="port for postgis"
+$ export DENGUE_CACHE_LOCATION="redis uri"
+$ export AWS_ACCESS_KEY="AWS access key"
+$ export AWS_SECRET_KEY="AWS secret key"
+$ export GOOGLE_MAP_API_KEY="Google Map API key"
+```
 
 ### Setup Postgis
 
@@ -63,7 +84,13 @@ CREATE ROLE dengue_user PASSWORD ...
 $ createdb dengue_db
 ```
 
-* Grant
+* Start Postgres server
+
+```sh
+$ pg_ctl -D /usr/local/var/postgres start
+```
+
+* Create postgis extension
 
 ```sh
 $ psql
@@ -92,24 +119,16 @@ Password: (again): some-secret
 Superuser created successfully.
 ```
 
-* Intialize Data
+* Initialize Data
 
 ```sh
 # Insert Substitute
-$ pipenv run pytho dengue/manage.py init_taiwan_data
+$ pipenv run python dengue/manage.py init_taiwan_data --settings=dengue.settings.<ENV>
 
 # Insert Hospitial
-$ python dengue/manage.py shell --settings=dengue.settings.<ENV>
-
->>> from hospital import load
->>> load.run('data/tainan_hospital.tsv')
+$ pipenv run python dengue/manage.py init_hospital_data --settings=dengue.settings.<ENV>
 ```
 
-* Start
-
-```sh
-$ pg_ctl -D /usr/local/var/postgres start
-```
 
 ### Setup Redis
 
@@ -130,30 +149,16 @@ $ npx tsc
 
 ### Start Backend Server
 
-
-* Setup environment variables
-
-```sh
-$ export DENGUE_SECRET_KEY="some hard to guess value"
-$ export DENGUE_DB_NAME="database name for postgis"
-$ export DENGUE_DB_USER="user name for postgis"
-$ export DENGUE_DB_PASSWORD="user password for postgis"
-$ export DENGUE_DB_HOST="host for postgis"
-$ export DENGUE_DB_PORT="port for postgis"
-$ export DENGUE_CACHE_LOCATION="redis uri"
-$ export AWS_ACCESS_KEY="AWS access key"
-$ export AWS_SECRET_KEY="AWS secret key"
-```
-
-* Start local server
+* Start a local server
+  * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
-python manage.py runserver --settings=dengue.settings.<ENV>
+pipenv run python manage.py runserver --settings=dengue.settings.<ENV>
 ```
 
 * Start production server
 
-```
+```sh
 sudo uwsgi --ini dengue.ini
 ```
 
@@ -165,11 +170,12 @@ sudo killall -s INT uwsgi
 
 ## Run dengue-backend INSIDE Docker Container
 
-* Create `env.cfg` at the root (`env-template.cfg` is the template for `env.cfg`)
+* Setup environement variables by creating `env.cfg` at the root directory (Use `env-template.cfg` as the template for `env.cfg`)
   * Note that the following key pairs should have the same value
-    * POSTGRES_DBNAME, DENGUE_DB_NAME
-    * DENGUE_DB_USER, POSTGRES_USER
-    * DENGUE_DB_PASSWORD, POSTGRES_PASS
+    * `POSTGRES_DBNAME`, `DENGUE_DB_NAME`
+    * `DENGUE_DB_USER`, `POSTGRES_USER`
+    * `DENGUE_DB_PASSWORD`, `POSTGRES_PASS`
+  * `INIT_DB` should be true and `GOOGLE_MAP_API_KEY` should be proper API key only when the database is first created and used to initial data
 
 ```sh
 $ docker-compose build

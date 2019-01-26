@@ -1,10 +1,12 @@
+import os
 import time
+
 import googlemaps
 
 from .models import Hospital
 
 
-gmaps = googlemaps.Client(key='AIzaSyCCki0E4UW6IFXflnSW_5R5Mn20ABgnOVM')
+gmaps = googlemaps.Client(key=os.environ.get('GOOGLE_MAP_API_KEY'))
 
 
 def run(file_path):
@@ -19,7 +21,7 @@ def run(file_path):
         name = line_split[0]
         address = line_split[1]
 
-        print (name, address)
+        print(name, address)
 
         geocode_result = gmaps.geocode(address)
         if len(geocode_result) == 0:
