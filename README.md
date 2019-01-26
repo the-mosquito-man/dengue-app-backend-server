@@ -1,30 +1,47 @@
 # dengue-backend
 
 ## Getting Started
+
 ### Prerequistes
+
 * [Python3.6](https://www.python.org/downloads/)
 * [pipenv](https://pipenv.readthedocs.io/en/latest/)
 * [Node.js](https://nodejs.org/en/)
 * [npm](https://www.npmjs.com)
+* [npx](https://www.npmjs.com/package/npx)
 * [Docker](https://docs.docker.com/engine/installation/)
 * [postgresql](https://www.postgresql.org/download/)
 * [postgis](https://postgis.net/install/)
 * [Pillow](https://github.com/python-pillow/Pillow)
 
-### Install Dependency for Pillow
+#### Install Postgis on macOS
+
+```sh
+$ brew install postgresql
+$ brew install postgis
+$ brew install gdal
+$ brew install libgeoip
+```
+
+#### Install Redis on macOS
+
+```sh
+$ brew install redis
+```
+
+#### Install Pillow Dependency on Ubuntu
 
 * For Ubuntu User
 
 ```sh
-sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+$ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 ```
 
 ### Install Backend Packages
 
-```python
-pipenv install
+```sh
+$ pipenv install
 ```
-
 
 ## Run dengue-backend OUTSIDE Docker Container
 
@@ -60,13 +77,13 @@ CREATE EXTENSION
 * Initial Database
 
 ```sh
-$ pipenv python manage.py migrate --settings=dengue.settings.<ENV>
+$ pipenv run python manage.py migrate --settings=dengue.settings.<ENV>
 ```
 
 * Create Superuser
 
 ```sh
-$ python manage.py createsuperuser --settings=dengue.settings.<ENV>
+$ pipenv run python manage.py createsuperuser --settings=dengue.settings.<ENV>
 
 Username: admin
 Email address: admin@example.com
@@ -78,21 +95,20 @@ Superuser created successfully.
 * Intialize Data
 
 ```sh
-$ python dengue/manage.py shell --settings=dengue.settings.<ENV>
+# Insert Substitute
+$ pipenv run pytho dengue/manage.py init_taiwan_data
 
 # Insert Hospitial
+$ python dengue/manage.py shell --settings=dengue.settings.<ENV>
+
 >>> from hospital import load
 >>> load.run('data/tainan_hospital.tsv')
-
-# Insert substitue
->>> from taiwan import load
->>> load.run()
 ```
 
 * Start
 
 ```sh
-pg_ctl -D /usr/local/var/postgres start
+$ pg_ctl -D /usr/local/var/postgres start
 ```
 
 ### Setup Redis
@@ -100,16 +116,16 @@ pg_ctl -D /usr/local/var/postgres start
 * Start
 
 ```sh
-redis-server
+$ redis-server
 ```
 
 ### Setup Frontend
 
 ```sh
-cd dengue/static/
-npm install
-npm run typings install
-npx tsc
+$ cd dengue/static/
+$ npm install
+$ npm run typings install
+$ npx tsc
 ```
 
 ### Start Backend Server
@@ -150,18 +166,18 @@ sudo killall -s INT uwsgi
 ## Run dengue-backend INSIDE Docker Container
 
 * Create `env.cfg` at the root (`env-template.cfg` is the template for `env.cfg`)
-	* Note that the following key pairs should have the same value
-		* POSTGRES_DBNAME, DENGUE_DB_NAME
-		* DENGUE_DB_USER, POSTGRES_USER
-		* DENGUE_DB_PASSWORD, POSTGRES_PASS
+  * Note that the following key pairs should have the same value
+    * POSTGRES_DBNAME, DENGUE_DB_NAME
+    * DENGUE_DB_USER, POSTGRES_USER
+    * DENGUE_DB_PASSWORD, POSTGRES_PASS
 
 ```sh
-docker-compose build
-docker-compose up
-```		  
-
+$ docker-compose build
+$ docker-compose up
+```
 
 ## License
+
 Copyright (c) NCKU The Mosquito Man Project. All rights reserved.
 
 Licensed under the MIT License.
