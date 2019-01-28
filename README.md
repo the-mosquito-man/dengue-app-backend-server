@@ -1,8 +1,10 @@
-# dengue-backend
+# Dengue App - Backend Server
 
 ## Table of content
-1. [Getting Started](#sec-1)
-
+* [Getting Started](#sec-1)
+* [Run dengue-backend OUTSIDE Docker Container](#sec-2)
+* [Run dengue-backend INSIDE Docker Container](#sec-3)
+* [License](sec-4)
 
 <a name='sec-1'></a>
 ## Getting Started
@@ -22,25 +24,26 @@
 #### Install Postgis on macOS
 
 ```sh
-$ brew install PostgreSQL
-$ brew install postgis
-$ brew install gdal
-$ brew install libgeoip
+brew install PostgreSQL
+brew install postgis
+brew install gdal
+brew install libgeoip
 ```
 
 #### Install Redis on macOS
 
 ```sh
-$ brew install redis
+brew install redis
 ```
 
 #### Install Pillow Dependency on Ubuntu
 
 ```sh
-$ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
+sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev liblcms2-dev libwebp-dev tcl8.6-dev tk8.6-dev python-tk
 ```
 
 
+<a name='sec-2'></a>
 ## Run dengue-backend OUTSIDE Docker Container
 
 ### Setup Backend
@@ -48,7 +51,7 @@ $ sudo apt-get install libtiff5-dev libjpeg8-dev zlib1g-dev libfreetype6-dev lib
 * Install Backend Packages
 
 ```sh
-$ pipenv install
+pipenv install
 ```
 
 * Setup environment variables
@@ -81,13 +84,13 @@ CREATE ROLE dengue_user PASSWORD ...
 * Create database
 
 ```sh
-$ createdb dengue_db
+createdb dengue_db
 ```
 
 * Start Postgres server
 
 ```sh
-$ pg_ctl -D /usr/local/var/postgres start
+pg_ctl -D /usr/local/var/postgres start
 ```
 
 * Create postgis extension
@@ -102,12 +105,14 @@ CREATE EXTENSION
 ```
 
 * Initial Database
+    * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
-$ pipenv run python manage.py migrate --settings=dengue.settings.<ENV>
+pipenv run python manage.py migrate --settings=dengue.settings.<ENV>
 ```
 
 * Create Superuser
+    * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
 $ pipenv run python manage.py createsuperuser --settings=dengue.settings.<ENV>
@@ -120,13 +125,14 @@ Superuser created successfully.
 ```
 
 * Initialize Data
+    * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
 # Insert Substitute
-$ pipenv run python dengue/manage.py init_taiwan_data --settings=dengue.settings.<ENV>
+pipenv run python dengue/manage.py init_taiwan_data --settings=dengue.settings.<ENV>
 
 # Insert Hospitial
-$ pipenv run python dengue/manage.py init_hospital_data --settings=dengue.settings.<ENV>
+pipenv run python dengue/manage.py init_hospital_data --settings=dengue.settings.<ENV>
 ```
 
 
@@ -168,6 +174,7 @@ sudo uwsgi --ini dengue.ini
 sudo killall -s INT uwsgi
 ```
 
+<a name="sec-3"></a>
 ## Run dengue-backend INSIDE Docker Container
 
 * Setup environement variables by creating `env.cfg` at the root directory (Use `env-template.cfg` as the template for `env.cfg`)
@@ -182,6 +189,8 @@ $ docker-compose build
 $ docker-compose up
 ```
 
+
+<a name="sec-4"></a>
 ## License
 
 Copyright (c) NCKU The Mosquito Man Project. All rights reserved.
