@@ -185,6 +185,7 @@ sudo killall -s INT uwsgi
     * `DENGUE_DB_USER`, `POSTGRES_USER`
     * `DENGUE_DB_PASSWORD`, `POSTGRES_PASS`
   * `INIT_DB` should be true and `GOOGLE_MAP_API_KEY` should be proper API key only when the database is first created and used to initial data
+  * The hostname and other nginx configuration can be configured in. `docker/nginx`.
 
 ```sh
 docker-compose build
@@ -208,12 +209,12 @@ docker exec -it <CONTAINER ID>  python3 dengue/manage.py migrate --settings=deng
 docker exec -it <CONTAINER ID>  python3 dengue/manage.py createsuperuser --settings=dengue.settings.production
 ```
 
-### Clean Up Docker Image
+### Clean Up Docker Image and Volumes (Use with Cautious)
+Note that this command will clean up all the data.
 
 ```sh
-docker-compose down -v
+docker-compose down -v --rmi local
 ```
-
 
 <a name="sec-4"></a>
 
