@@ -9,13 +9,25 @@ services:
     expose:
       - "5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data/
+      - pg_data:/var/lib/postgresql/data/
 
   redis:
     container_name: 'redis'
     image: 'redis'
     expose:
       - "6379"
+
+  nginx:
+    container_name: 'nginx'
+    build: ./docker/nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - web_data:/dengue-backend
+      - nginx_log:/var/log/nginx
+    depends_on:
+      - web
 
   web:
     container_name: 'web'
@@ -28,9 +40,13 @@ services:
     depends_on:
       - postgis
       - redis
+    volumes:
+      - web_data:/dengue-backend
     links:
       - "postgis"
       - "redis"
 
 volumes:
-  pgdata:
+  pg_data:
+  nginx_log:
+  web_data:

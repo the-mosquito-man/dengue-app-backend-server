@@ -14,5 +14,12 @@ then
     python3 dengue/manage.py init_taiwan_data --settings=dengue.settings.production
 fi
 
+# echo "Run Server"
+# python3 dengue/manage.py runserver 0.0.0.0:8000 --settings=dengue.settings.production
+
+echo "Collect static"
+python3 dengue/manage.py collectstatic --settings=dengue.settings.production --noinput
+
 echo "Run Server"
-python3 dengue/manage.py runserver 0.0.0.0:8000 --settings=dengue.settings.production
+cd dengue && uwsgi --ini dengue.ini
+# uwsgi --ini dengue/dengue.ini
