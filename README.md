@@ -57,16 +57,16 @@ pipenv install
 * Setup environment variables
 
 ```sh
-$ export DENGUE_SECRET_KEY="some hard to guess value"
-$ export DENGUE_DB_NAME="database name for postgis"
-$ export DENGUE_DB_USER="user name for postgis"
-$ export DENGUE_DB_PASSWORD="user password for postgis"
-$ export DENGUE_DB_HOST="host for postgis"
-$ export DENGUE_DB_PORT="port for postgis"
-$ export DENGUE_CACHE_LOCATION="redis uri"
-$ export AWS_ACCESS_KEY="AWS access key"
-$ export AWS_SECRET_KEY="AWS secret key"
-$ export GOOGLE_MAP_API_KEY="Google Map API key"
+export DENGUE_SECRET_KEY="some hard to guess value"
+export DENGUE_DB_NAME="database name for postgis"
+export DENGUE_DB_USER="user name for postgis"
+export DENGUE_DB_PASSWORD="user password for postgis"
+export DENGUE_DB_HOST="host for postgis"
+export DENGUE_DB_PORT="port for postgis"
+export DENGUE_CACHE_LOCATION="redis uri"
+export AWS_ACCESS_KEY="AWS access key"
+export AWS_SECRET_KEY="AWS secret key"
+export GOOGLE_MAP_API_KEY="Google Map API key"
 ```
 
 ### Setup Postgis
@@ -108,14 +108,14 @@ CREATE EXTENSION
     * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
-pipenv run python manage.py migrate --settings=dengue.settings.<ENV>
+pipenv run python dengue/manage.py migrate --settings=dengue.settings.<ENV>
 ```
 
 * Create Superuser
     * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
-$ pipenv run python manage.py createsuperuser --settings=dengue.settings.<ENV>
+$ pipenv run python dengue/manage.py createsuperuser --settings=dengue.settings.<ENV>
 
 Username: admin
 Email address: admin@example.com
@@ -141,16 +141,16 @@ pipenv run python dengue/manage.py init_hospital_data --settings=dengue.settings
 * Start
 
 ```sh
-$ redis-server
+redis-server
 ```
 
 ### Setup Frontend
 
 ```sh
-$ cd dengue/static/
-$ npm install
-$ npm run typings install
-$ npx tsc
+cd dengue/static/
+npm install
+npm run typings install
+npx tsc
 ```
 
 ### Start Backend Server
@@ -159,12 +159,13 @@ $ npx tsc
   * Different <ENV> can be configed in `dengue/dengue/settings`
 
 ```sh
-pipenv run python manage.py runserver --settings=dengue.settings.<ENV>
+pipenv run python dengue/manage.py runserver --settings=dengue.settings.<ENV>
 ```
 
 * Start production server
 
 ```sh
+cd dengue/
 sudo uwsgi --ini dengue.ini
 ```
 
@@ -175,6 +176,7 @@ sudo killall -s INT uwsgi
 ```
 
 <a name="sec-3"></a>
+
 ## Run dengue-backend INSIDE Docker Container
 
 * Setup environement variables by creating `env.cfg` at the root directory (Use `env-template.cfg` as the template for `env.cfg`)
@@ -185,12 +187,36 @@ sudo killall -s INT uwsgi
   * `INIT_DB` should be true and `GOOGLE_MAP_API_KEY` should be proper API key only when the database is first created and used to initial data
 
 ```sh
-$ docker-compose build
-$ docker-compose up
+docker-compose build
+docker-compose up -d
+```
+
+### Migrate Database Manually
+It's possible that the "web" container runs before "postgis" contain is ready and thus cannot migrate database in time.  
+If this happens, you will get a 502 response when you enter http://127.0.0.1.  
+In such case, you should manually migrate the database.
+
+Use `docker ps` command to find the container ID of "dengue-backend_web" and execute the following command to migrate the database.
+
+```sh
+docker exec -it <CONTAINER ID>  python3 dengue/manage.py migrate --settings=dengue.settings.production
+```
+
+### Create Super User
+
+```sh
+docker exec -it <CONTAINER ID>  python3 dengue/manage.py createsuperuser --settings=dengue.settings.production
+```
+
+### Clean Up Docker Image
+
+```sh
+docker-compose down -v
 ```
 
 
 <a name="sec-4"></a>
+
 ## License
 
 Copyright (c) NCKU The Mosquito Man Project. All rights reserved.
