@@ -16,7 +16,7 @@ pytz = "==2016.7"
 redis = "==2.10.5"
 requests = "==2.20.0"
 Django = "==2.1.5"
-Pillow = "==5.4.0"
+Pillow = "==6.2.0"
 uwsgi = "==2.0.17.1"
 
 [dev-packages]
